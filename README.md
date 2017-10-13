@@ -7,6 +7,7 @@ Probably some sophisticated techniques of data preprocessing and densification w
 # Data preparation
 
 Original data comes from https://github.com/JUrban/deepmath
+
 More precisely, we take
 * [these](https://github.com/JUrban/deepmath/tree/master/trivdata) files witch contain names of theorems along with balanced set of useful and uneuseful premises for proving them
 * [this](https://github.com/JUrban/deepmath/blob/master/mizar40/features.gz) file providing description of every theorem (premise) by features
