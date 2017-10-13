@@ -6,3 +6,6 @@
 
 ![Sums of rows in feature matrix](sums_of_rows.png)
 
+
+![Sums of columns in feature matrix](sums_of_cols.png)
+
