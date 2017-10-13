@@ -1,5 +1,4 @@
 import hashlib
-import time
 import csv
 import numpy as np
 import scipy.sparse as sps
@@ -32,10 +31,8 @@ def generate_hashes(features, output_dir):
     print("Number of different features:", len(set_of_features))
 
     list_of_features = list(set_of_features)
-    t0 = time.time()
     hashes_of_features = {x : hashlib.md5(x.encode('utf-8')).hexdigest()
                                  for x in list_of_features}
-    print("Computing hashes took {} seconds".format(time.time()-t0))
 
 #TODO use your function
     with open(os.path.join(output_dir, "hashes_of_features.csv"), 'w') as csv_file:
