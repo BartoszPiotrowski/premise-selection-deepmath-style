@@ -1,4 +1,3 @@
-import hashlib
 import csv
 import numpy as np
 import scipy.sparse as sps
@@ -6,48 +5,41 @@ import os.path
 from .saving_loading import *
 
 
-def generate_hashes(features, output_dir):
-    print("Reading features from", features)
+def make_dict_and_set_of_features(features_file, output_directory):
 
-    with open(features, "r") as f:
+    features_file = os.path.abspath(features_file)
+    stats = open(os.path.join(output_directory, "stats.txt"), 'w')
+    stats.write("Reading features from {}\n".format(features_file))
+
+    with open(features_file, "r") as f:
         list_of_lines = f.read().splitlines()
-    theorem_names = []
-    features_of_theorems = []
+
+    dict_of_features = {}
     for i in list_of_lines:
         i = i.split(":")
-        theorem_names.append(i[0])
-        features_of_theorems.append(i[1].replace('"', '').split(", "))
+        theorem_name = i[0]
+        theorem_features = i[1].replace('"', '').split(", ")
+        dict_of_features[theorem_name] = theorem_features
 
-    features_of_theorems_dict = dict(zip(theorem_names, features_of_theorems))
+    assert len(list_of_lines) == len(dict_of_features)
 
-    print("Number of theorems: ", len(features_of_theorems))
+    stats.write("Number of theorems: {}\n".format(len(dict_of_features)))
 
-    counter = 0
-    for i in features_of_theorems:
-        counter += len(i)
-    print("Average number of features per theorem:", counter/len(theorem_names))
+    lengths = [len(i) for i in dict_of_features.values()]
+    save_csv(lengths, os.path.join(output_directory, "lengths.csv"))
+    stats.write("Average number of features per theorem: {}\n".format(sum(lengths)/len(lengths)))
+    stats.write("Minimal number of features per theorem: {}\n".format(min(lengths)))
+    stats.write("Maximal number of features per theorem: {}\n".format(max(lengths)))
 
-    set_of_features = set().union(*features_of_theorems)
-    print("Number of different features:", len(set_of_features))
+    set_of_features = set().union(*dict_of_features.values())
+    stats.write("Number of different features: {}\n".format(len(set_of_features)))
 
-    list_of_features = list(set_of_features)
-    hashes_of_features = {x : hashlib.md5(x.encode('utf-8')).hexdigest()
-                                 for x in list_of_features}
-
-#TODO use your function
-    with open(os.path.join(output_dir, "hashes_of_features.csv"), 'w') as csv_file:
-        writer = csv.writer(csv_file, delimiter =";",quoting=csv.QUOTE_MINIMAL)
-        for feature, hash_key in hashes_of_features.items():
-           writer.writerow([hash_key, feature])
-    print("Hashes saved to hashes_of_features.csv")
-
-    save_obj(hashes_of_features,
-             os.path.join(output_dir, "hashes_of_features.pkl"))
-    save_obj(features_of_theorems_dict,
-             os.path.join(output_dir, "features_of_theorems.pkl"))
+    save_obj(dict_of_features, os.path.join(output_directory, "dict_of_features.pkl"))
+    save_csv(list(set_of_features), os.path.join(output_directory, "set_of_features.csv"), delimiter = ":")
+    stats.close()
 
 def concatenate_coos_to_csr(input_directory, output_directory):
-    list_of_files = [input_directory + "/" + i for i in os.listdir(input_directory)]
+    list_of_files = [os.path.join(input_directory, "/", i) for i in os.listdir(input_directory)]
     print("Reading", len(list_of_files), "files from", input_directory, "directory")
 
     list_of_labels = []
