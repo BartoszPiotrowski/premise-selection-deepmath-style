@@ -15,7 +15,7 @@ if __name__ == "__main__":
         print("Call 'python3 process_file.py dict_of_features.pkl set_of_features.csv output_directory file_name'")
         sys.exit(0)
 
-    with open(file_name,"r") as f:
+    with open(file_name, encoding ='utf-8') as f:
         list_of_lines = f.read().splitlines()
 
     def bin_vector(set_of_all_features, features):

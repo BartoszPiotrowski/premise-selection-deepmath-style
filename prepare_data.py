@@ -23,30 +23,18 @@ if __name__ == "__main__":
     output_directory = os.path.normpath(args.output_directory)
     n_jobs = args.n_jobs
 
-    generate_hashes(features, output_directory)
+    make_dict_and_set_of_features(features, output_directory)
 
-    subprocess.call(["mkdir", os.path.join(output_directory, "processed")])
+    subprocess.call(["mkdir", os.path.join(output_directory, "coo")])
     l1 = subprocess.Popen(['find', input_directory, "-type", "f"], stdout=subprocess.PIPE)
     l2 = subprocess.Popen(['parallel', '-j' + str(n_jobs), 'python3',
                            os.path.join("tools", 'process_file.py'),
-                           os.path.join(output_directory, 'features_of_theorems.pkl'),
-                           os.path.join(output_directory, 'hashes_of_features.pkl'),
-                           os.path.join(output_directory, 'processed'), '{}'],
+                           os.path.join(output_directory, 'dict_of_features.pkl'),
+                           os.path.join(output_directory, 'set_of_features.csv'),
+                           os.path.join(output_directory, 'coo'), '{}'],
                            stdin=l1.stdout, stdout=subprocess.PIPE)
     l1.stdout.close()
     out, err = l2.communicate()
 
-    subprocess.call(["mkdir", os.path.join(output_directory, "processed_coo")])
-
-    k1 = subprocess.Popen(['find', os.path.join(output_directory, 'processed'), "-type", "f"], stdout=subprocess.PIPE)
-    k2 = subprocess.Popen(['parallel', '-j' + str(n_jobs), 'python3',
-                           os.path.join("tools", 'file_to_coo.py'), '{}',
-                           os.path.join(output_directory, 'hashes_of_features.pkl'),
-                           os.path.join(output_directory, 'processed_coo')],
-                           stdin=k1.stdout,
-                           stdout=subprocess.PIPE)
-    k1.stdout.close()
-    out, err = k2.communicate()
-
-    concatenate_coos_to_csr(os.path.join(output_directory, "processed_coo"),
+    concatenate_coos_to_csr(os.path.join(output_directory, "coo"),
                             output_directory)

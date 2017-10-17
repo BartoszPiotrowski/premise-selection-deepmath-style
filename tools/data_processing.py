@@ -39,7 +39,7 @@ def make_dict_and_set_of_features(features_file, output_directory):
     stats.close()
 
 def concatenate_coos_to_csr(input_directory, output_directory):
-    list_of_files = [os.path.join(input_directory, "/", i) for i in os.listdir(input_directory)]
+    list_of_files = [os.path.join(input_directory, i) for i in os.listdir(input_directory)]
     print("Reading", len(list_of_files), "files from", input_directory, "directory")
 
     list_of_labels = []

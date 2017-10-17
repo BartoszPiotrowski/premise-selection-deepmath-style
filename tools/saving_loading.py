@@ -4,17 +4,18 @@ import numpy as np
 import itertools
 from sklearn.model_selection import GridSearchCV
 
-def save_obj(obj, name):
-    print("Saving given object to file {}".format(name))
-    with open(name, 'wb') as f:
+def save_obj(obj, filename):
+    print("Saving given object to file {}".format(filename))
+    with open(filename, 'wb') as f:
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
-def load_obj(name):
-    print("Loading object {}".format(name))
-    with open(name, 'rb') as f:
+def load_obj(filename):
+    print("Loading object {}".format(filename))
+    with open(filename, 'rb') as f:
         return pickle.load(f)
 
 def save_csv(obj, filename, delimiter = ","):
+    print("Saving given object to CSV file {}".format(filename))
     if isinstance(obj, np.ndarray):
         np.savetxt(filename, obj, delimiter=delimiter)
     elif isinstance(obj, list):
@@ -28,7 +29,8 @@ def save_csv(obj, filename, delimiter = ","):
         print("Cannot save object of this type as csv file.")
 
 # to be tested more
-def read_csv(filename, delimiter = ",", type_of_records = "int"):
+def read_csv(filename, delimiter = ",", type_of_records = "string"):
+    print("Reading CSV file {}".format(filename))
     with open(filename, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=delimiter, quotechar='"')
         if type_of_records == "int":
