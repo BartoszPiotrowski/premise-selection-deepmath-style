@@ -1,0 +1,6 @@
+Reading features from /home/bartosz/PhD/premise-selection-deepmath-style/data/MPTP2078/original_data/features
+Number of theorems: 4564
+Average number of features per theorem: 26.929666958808063
+Minimal number of features per theorem: 1
+Maximal number of features per theorem: 139
+Number of different features: 10241
