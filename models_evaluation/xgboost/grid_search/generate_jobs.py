@@ -4,8 +4,6 @@ import os
 sys.path.append('../../..')
 from tools.job_generator import generate_jobs
 
-print("Name:", __name__)
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Generate set of jobs from a given template')
