@@ -48,6 +48,10 @@ def read_csv(filename, delimiter = ",", type_of_records = "string"):
 def listdir_fullpath(d):
     return [os.path.join(d, f) for f in os.listdir(d)]
 
+def printll(ll):
+    for l in ll:
+        print(" ".join(map(str, l)))
+
 # Something is wrong with the function below -- messed header; don't use it for
 # now
 def GridCV_scores_to_csv(gs_clf, export_file):
