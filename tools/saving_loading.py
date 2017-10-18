@@ -1,4 +1,5 @@
 import pickle
+import os
 import csv
 import numpy as np
 import itertools
@@ -42,6 +43,14 @@ def read_csv(filename, delimiter = ",", type_of_records = "string"):
         if len(data[0]) == 1:
             data = list(itertools.chain.from_iterable(data))
         return data
+
+
+def listdir_fullpath(d):
+    return [os.path.join(d, f) for f in os.listdir(d)]
+
+def printll(ll):
+    for l in ll:
+        print(" ".join(map(str, l)))
 
 # Something is wrong with the function below -- messed header; don't use it for
 # now
