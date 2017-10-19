@@ -1,38 +1,17 @@
 import xgboost as xgb
-from sklearn.model_selection import train_test_split
 import sys
-import os
-import sklearn.metrics as sklm
-from tools import *
+sys.path.append("../..")
+from tools.saving_loading import *
 
-data = load_obj(sys.argv[1])
-y = data["labels"]
-X = data["features"]
+y = read_csv(sys.argv[1], type_of_records = "int")
+X = load_obj(sys.argv[2])
 dtrain = xgb.DMatrix(X, label = y)
-#####################################
-p = {
-    "max_depth":3,
-    "eta":1,
-    "gamma":0,
-    "num_boost_round":4,
-    "early_stopping_rounds":2
-}
-#####################################
-params = {
-    "max_depth":p["max_depth"],
-    "eta":p["eta"],
-    "gamma":p["gamma"],
+param = {
+    "max_depth":10,
+    "eta":0.06,
     "objective":"binary:logistic"
 }
-x = xgb.cv(
-    params = params,
-    dtrain = dtrain,
-    num_boost_round = p["num_boost_round"],
-    early_stopping_rounds = p["early_stopping_rounds"],
-    nfold = 4,
-    metrics = {"error","auc","logloss"}
-)
-
-output_name = os.path.join("output_of_jobs", "_".join(map(str, list(p.values())))+".pkl")
-save_obj({"params":p, "stats":x}, output_name)
+num_round = 2000
+model = xgb.train(param, dtrain, num_round)
+model.save_model("xgboost_2000.model")
 
